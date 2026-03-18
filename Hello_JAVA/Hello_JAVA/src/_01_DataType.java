@@ -14,7 +14,7 @@ public class _01_DataType {
             참조자료형은 값이 들어있는 주소를 저장
 
         */
-
+            int a = 0;
             int age = 20;
             double score = 90.5;
             boolean isChecked = true;
