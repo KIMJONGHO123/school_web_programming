@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class _07_List {
     public static void main(String[] args) {
@@ -8,10 +9,10 @@ public class _07_List {
         /*
             리스트 : 크기가 정해지지 않은 값들의 묶음
 
-            ArrayList
-            LinkedList
-            HashSet
-            HashMap
+            ArrayList - add / get / contains / set / remove / clear
+            LinkedList - getFirst / getLast (ArrayList와 차이 발생)
+            HashSet - 순서와 중복을 허용하지 않음
+            HashMap - HashSet의 특성을 가진 key와 value의 쌍 묶음
 
             //ArrayList
             // ArrayList<자료형> 변수명 = new ArrayList<>();
@@ -69,7 +70,10 @@ public class _07_List {
                 // names.add("홍길동");
 
                 // for (String string : names) {
-                //     System.out.println(string);
+                //     if(string == "홍길동"){
+                //         System.out.println("홍길동이 존재합니다.");
+                //     }
+                    
                 // }
 
                 // HashMap
@@ -82,7 +86,7 @@ public class _07_List {
                 // for (Integer string : students.keySet()) {
                 //     System.out.println(students.get(string));
                 // }
-
+ 
 
     }
     
