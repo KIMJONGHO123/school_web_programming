@@ -43,14 +43,50 @@ public class _09_Class {
             }
 
        }
-       Person person = new Person("홍길동", 20);
-       person.introduce();
-       person.name="이대호";
-    //    person.SetName("이대호");
-       person.introduce();
 
-       Person.hobby = "축구";
-       Person.introduceHobby();
+    //    Person person = new Person("홍길동", 20);
+    //    person.introduce();
+    //    person.name="이대호";
+    // //    person.SetName("이대호");
+    //    person.introduce();
+
+    //    Person.hobby = "축구";
+    //    Person.introduceHobby();
+
+
+       /**
+        상속 : 상위단에서 기능을 정의하고 하위 자식클래스에서 활용하고자 할 때 사용
+        클래스 자식클래스 extends 부모클래스 {
+        
+        }
+
+        */
+       class Student extends Person{
+            String university;
+
+            public Student(String name, int age, String university){
+                super(name,age);
+                this.university = university;
+            }
+
+            @Override
+            public void introduce(){
+                super.introduce();
+                System.out.println(String.format("학교 : %s", this.university));
+            }
+
+            public void study(String subject){
+                System.out.println(String.format("강의 : %s", subject));
+            }
+
+
+       }
+    
+       Student student = new Student("홍길동", 23, "동의대학교");
+
+       student.introduce();
+       student.study("Hello Java");
+
     }
     
 }
