@@ -1,33 +1,56 @@
 package com.example.demo.member.service;
 
 
-import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.example.demo.member.controller.dto.JoinRequest;
 import com.example.demo.member.repository.MemberRepository;
 import com.example.demo.member.repository.entity.Member;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl implements MemberService{
     
     private final MemberRepository memberRepository;
 
     @Override
-    public void Join(String id, String name, int age, String hobby){
-        if(id==null ||id.isEmpty() || name == null||  name.isEmpty()|| age <=0|| hobby ==null || hobby.isEmpty()){
-            throw new IllegalArgumentException("값이 없습니다.");
+    @Transactional
+    public String Join(@RequestBody JoinRequest joinRequest) throws Exception{
+        if(joinRequest.getId()==null ||joinRequest.getId().isEmpty() || joinRequest.getName() == null|| joinRequest.getName().isEmpty()|| joinRequest.getAge() <=0|| joinRequest.getHobby() ==null || joinRequest.getHobby().isEmpty()){
+            throw new Exception();
         }
         Member member = Member.builder()
-                            .id(id)
-                            .name(name)
-                            .age(age)
-                            .hobby(hobby)
+                            .id(joinRequest.getId())
+                            .name(joinRequest.getName())
+                            .age(joinRequest.getAge())
+                            .hobby(joinRequest.getHobby())
                             .build();
 
         memberRepository.save(member);
+        return "success";
     }
     
+    @Override
+    public String getMember(){
+        return "Hello DEU!";
+    }
+
+    @Override
+    public Member findById(Long index){
+        return memberRepository.findById(index);
+    }
     
+    @Override
+    public List<Member> findAll(){
+        List<Member> list = new ArrayList<>();
+        list = memberRepository.findAll();
+        return list;
+    }
 }
