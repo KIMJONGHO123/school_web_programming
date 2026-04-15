@@ -1,11 +1,260 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>주문 관리 시스템</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 30px;
+        }
+        input, button {
+            margin: 5px;
+            padding: 6px;
+        }
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+            width: 100%;
+        }
+        td, th {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        h2 {
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-    
+
+<h1>📊 간단 주문 관리 시스템</h1>
+
+<!-- ================= 회원 ================= -->
+<h2>👤 회원 등록</h2>
+
+<input type="text" id="memberName" placeholder="회원 이름">
+<button type="button" onclick="createMember()">회원 등록</button>
+<table>
+    <thead>
+        <tr>
+            <th>이름</th>
+        </tr>
+    </thead>
+    <tbody id="memberTable"></tbody>
+</table>
+
+<ul id="memberList"></ul>
+
+<!-- ================= 상품 ================= -->
+<h2>📦 상품 등록</h2>
+
+<input type="text" id="productName" placeholder="상품 이름">
+<input type="number" id="productPrice" placeholder="상품 가격">
+<button type="button" onclick="createProduct()">상품 등록</button>
+<table>
+    <thead>
+        <tr>
+            <th>상품명</th>
+            <th>가격</th>
+        </tr>
+    </thead>
+    <tbody id="productTable"></tbody>
+</table>
+
+<ul id="productList"></ul>
+
+<!-- ================= 주문 ================= -->
+<h2>🧾 주문 등록</h2>
+
+<input type="number" id="memberIndex" placeholder="회원 ID">
+<input type="number" id="productIndex" placeholder="상품 ID">
+<input type="number" id="quantity" placeholder="수량">
+
+<button type="button" onclick="createOrder()">주문 생성</button>
+
+<!-- ================= 주문 조회 ================= -->
+<h2>📋 주문 목록</h2>
+
+<button onclick="loadOrders()">조회하기</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>회원</th>
+            <th>상품</th>
+            <th>수량</th>
+            <th>금액</th>
+        </tr>
+    </thead>
+    <tbody id="orderTable"></tbody>
+</table>
+
+<script>
+
+// ================= 회원 =================
+
+function createMember() {
+
+    const name = document.getElementById("memberName").value;
+
+    if (!name) {
+        alert("이름 입력");
+        return;
+    }
+
+    fetch("/members/join", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name: name })
+    })
+    .then(res => res.text())
+    .then(() => {
+        alert("회원 등록 완료");
+        loadMembers();
+    });
+}
+
+function loadMembers() {
+
+    fetch("/members")
+    .then(res => res.json())
+    .then(data => {
+
+        const table = document.getElementById("memberTable");
+        table.innerHTML = "";
+
+        data.forEach(m => {
+            table.innerHTML += `
+                <tr>
+                    <td>${m.name}</td>
+                </tr>
+            `;
+        });
+    });
+}
+
+// ================= 상품 =================
+
+function createProduct() {
+
+    const name = document.getElementById("productName").value;
+    const price = document.getElementById("productPrice").value;
+
+    if (!name || !price) {
+        alert("값 입력");
+        return;
+    }
+
+    fetch("/products/addProduct", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: name,
+            price: Number(price)
+        })
+    })
+    .then(res => res.text())
+    .then(() => {
+        alert("상품 등록 완료");
+        loadProducts();
+    });
+}
+
+function loadProducts() {
+
+    fetch("/products")
+    .then(res => res.json())
+    .then(data => {
+
+        const table = document.getElementById("productTable");
+        table.innerHTML = "";
+
+        data.forEach(p => {
+            table.innerHTML += `
+                <tr>
+                    <td>${p.name}</td>
+                    <td>${p.price}</td>
+                </tr>
+            `;
+        });
+    });
+}
+
+// ================= 주문 =================
+
+function createOrder() {
+
+    const memberIndex = document.getElementById("memberIndex").value;
+    const productIndex = document.getElementById("productIndex").value;
+    const quantity = document.getElementById("quantity").value;
+
+    if (!memberIndex || !productIndex || !quantity) {
+        alert("값을 입력하세요");
+        return;
+    }
+
+    fetch("/orders/addOrder", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            memberIndex: Number(memberIndex),
+            productIndex: Number(productIndex),
+            quantity: Number(quantity)
+        })
+    })
+    .then(res => res.text())
+    .then(() => {
+        alert("주문 완료!");
+        loadOrders();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("에러 발생");
+    });
+}
+
+// ================= 주문 조회 =================
+
+function loadOrders() {
+
+    fetch("/orders")
+    .then(res => res.json())
+    .then(data => {
+
+        const table = document.getElementById("orderTable");
+        table.innerHTML = "";
+
+        data.forEach(order => {
+            const row = `
+                <tr>
+                    <td>${order.member.name}</td>
+                    <td>${order.product.name}</td>
+                    <td>${order.quantity}</td>
+                    <td>${order.totalPrice}</td>
+                </tr>
+            `;
+            table.innerHTML += row;
+        });
+    });
+}
+
+// ================= 초기 로딩 =================
+
+window.onload = function() {
+    loadMembers();
+    loadProducts();
+    loadOrders();
+}
+
+</script>
+
 </body>
 </html>

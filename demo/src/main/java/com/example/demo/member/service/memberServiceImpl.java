@@ -21,16 +21,12 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
 
     @Override
-    @Transactional
     public String Join(@RequestBody JoinRequest joinRequest) throws Exception{
-        if(joinRequest.getId()==null ||joinRequest.getId().isEmpty() || joinRequest.getName() == null|| joinRequest.getName().isEmpty()|| joinRequest.getAge() <=0|| joinRequest.getHobby() ==null || joinRequest.getHobby().isEmpty()){
+        if(joinRequest.getName() == null|| joinRequest.getName().isEmpty()){
             throw new Exception();
         }
         Member member = Member.builder()
-                            .id(joinRequest.getId())
                             .name(joinRequest.getName())
-                            .age(joinRequest.getAge())
-                            .hobby(joinRequest.getHobby())
                             .build();
 
         memberRepository.save(member);
@@ -44,7 +40,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member findById(Long index){
-        return memberRepository.findById(index);
+        return memberRepository.findById(index).orElseThrow();
     }
     
     @Override

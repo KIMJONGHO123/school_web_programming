@@ -1,12 +1,13 @@
 package com.example.demo.member.repository.entity;
 
-
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,23 +15,31 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class Member {
+public class Order {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long index;
 
-    // String id;
+    LocalDate orderDate;
 
-    String name;
-
-    // int age;
-
-    // String hobby;
+    @ManyToOne // 여러개의 주문데이터가 하나의 상품을 가리키니까
+    @JoinColumn
+    Product product;
 
 
+    @ManyToOne
+    @JoinColumn
+    Member member;
+
+    int quantity;
+
+    int unitPrice;
+
+    int totalPrice;
 
 
 }

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.member.controller.dto.JoinRequest;
@@ -33,21 +32,16 @@ public class MemberController {
 
 
 
-    @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody JoinRequest joinRequest) throws Exception{
+    @PostMapping("/members/join")
+    public String join(@RequestBody JoinRequest joinRequest) throws Exception{
         // String id = joinRequest.getId();
         // int age = joinRequest.getAge();
         // String name = joinRequest.getName();
         // String hobby = joinRequest.getHobby();
         
-        String status = memberService.Join(joinRequest);
-        if("success".equals(status)){
-            return ResponseEntity.ok("회원가입 완료");
-        }else{
-            return ResponseEntity.ok("회원가입 실패");
-        }
+        String men=memberService.Join(joinRequest);
+        return men;
 
-        
     }
 
     // @GetMapping("/members/hello")

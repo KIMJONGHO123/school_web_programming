@@ -3,9 +3,9 @@ package com.example.demo.member.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.member.repository.entity.Member;
+import com.example.demo.member.repository.entity.Order;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member,Long> {
+public interface OrderRepository extends JpaRepository<Order,Long> {
     
 }

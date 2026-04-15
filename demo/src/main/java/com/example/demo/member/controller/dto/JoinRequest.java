@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class JoinRequest {
     
-    private String id;
+    // private String id;
     private String name;
-    private int age;
-    private String hobby;
+    // private int age;
+    // private String hobby;
 }

@@ -1,11 +1,12 @@
 package com.example.demo.member.service;
 
-import java.lang.reflect.Member;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.demo.member.controller.dto.JoinRequest;
+import com.example.demo.member.repository.entity.Member;
 
 public interface MemberService {
     
