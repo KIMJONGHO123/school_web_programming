@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리 CRUD</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f6f9;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        input {
+            width: 250px;
+            padding: 8px;
+            margin: 5px 0;
+        }
+
+        button {
+            padding: 8px 15px;
+            margin-top: 10px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #e9ecef;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>회원 관리 CRUD</h1>
+
+<!-- 회원 등록 -->
+<div class="container">
+
+    <h2>회원 등록</h2>
+
+    <input type="text" id="name" placeholder="이름"><br>
+    <input type="number" id="age" placeholder="나이"><br>
+    <input type="email" id="email" placeholder="이메일"><br>
+
+    <button onclick="createMember()">등록</button>
+
+</div>
+
+<!-- 회원 단건 조회 -->
+<div class="container">
+
+    <h2>회원 단건 조회</h2>
+
+    <input type="number" id="searchId" placeholder="회원 ID">
+
+    <button onclick="findMember()">조회</button>
+
+    <div id="memberResult"></div>
+
+</div>
+
+<!-- 회원 수정 -->
+<div class="container">
+
+    <h2>회원 수정</h2>
+
+    <input type="number" id="updateId" placeholder="회원 ID"><br>
+    <input type="text" id="updateName" placeholder="이름"><br>
+    <input type="number" id="updateAge" placeholder="나이"><br>
+    <input type="email" id="updateEmail" placeholder="이메일"><br>
+
+    <button onclick="updateMember()">수정</button>
+
+</div>
+
+<!-- 회원 삭제 -->
+<div class="container">
+
+    <h2>회원 삭제</h2>
+
+    <input type="number" id="deleteId" placeholder="회원 ID">
+
+    <button onclick="deleteMember()">삭제</button>
+
+</div>
+
+<!-- 전체 조회 -->
+<div class="container">
+
+    <h2>회원 전체 조회</h2>
+
+    <button onclick="findAllMembers()">전체 조회</button>
+
+    <table>
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>나이</th>
+            <th>이메일</th>
+        </tr>
+        </thead>
+
+        <tbody id="memberTableBody">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<script>
+
+    const API_URL = "http://localhost:8080/members";
+
+    // 회원 등록
+    async function createMember() {
+
+        const member = {
+            name: document.getElementById("name").value,
+            age: document.getElementById("age").value,
+            email: document.getElementById("email").value
+        };
+
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(member)
+        });
+
+        const result = await response.json();
+
+        alert("회원 등록 완료");
+
+        console.log(result);
+
+        findAllMembers();
+    }
+
+    // 회원 전체 조회
+    async function findAllMembers() {
+
+        const response = await fetch(API_URL);
+
+        const members = await response.json();
+
+        const tableBody = document.getElementById("memberTableBody");
+
+        tableBody.innerHTML = "";
+
+        members.forEach(member => {
+
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${member.id}</td>
+                    <td>${member.name}</td>
+                    <td>${member.age}</td>
+                    <td>${member.email}</td>
+                </tr>
+            `;
+        });
+    }
+
+    // 회원 단건 조회
+    async function findMember() {
+
+        const id = document.getElementById("searchId").value;
+
+        const response = await fetch(`${API_URL}/${id}`);
+
+        const member = await response.json();
+
+        document.getElementById("memberResult").innerHTML = `
+            <p>ID : ${member.id}</p>
+            <p>이름 : ${member.name}</p>
+            <p>나이 : ${member.age}</p>
+            <p>이메일 : ${member.email}</p>
+        `;
+    }
+
+    // 회원 수정
+    async function updateMember() {
+
+        const id = document.getElementById("updateId").value;
+
+        const member = {
+            name: document.getElementById("updateName").value,
+            age: document.getElementById("updateAge").value,
+            email: document.getElementById("updateEmail").value
+        };
+
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(member)
+        });
+
+        const result = await response.json();
+
+        alert("회원 수정 완료");
+
+        console.log(result);
+
+        findAllMembers();
+    }
+
+    // 회원 삭제
+    async function deleteMember() {
+
+        const id = document.getElementById("deleteId").value;
+
+        await fetch(`${API_URL}/${id}`, {
+            method: "DELETE"
+        });
+
+        alert("회원 삭제 완료");
+
+        findAllMembers();
+    }
+
+</script>
+
+</body>
+</html>
