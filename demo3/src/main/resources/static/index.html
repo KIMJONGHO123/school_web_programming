@@ -63,7 +63,6 @@
 
 <h1>회원 관리 CRUD</h1>
 
-<!-- 회원 등록 -->
 <div class="container">
 
     <h2>회원 등록</h2>
@@ -71,12 +70,12 @@
     <input type="text" id="name" placeholder="이름"><br>
     <input type="number" id="age" placeholder="나이"><br>
     <input type="email" id="email" placeholder="이메일"><br>
+    <input type="password" id="password" placeholder="비밀번호"><br>
 
     <button onclick="createMember()">등록</button>
 
 </div>
 
-<!-- 회원 단건 조회 -->
 <div class="container">
 
     <h2>회원 단건 조회</h2>
@@ -89,7 +88,6 @@
 
 </div>
 
-<!-- 회원 수정 -->
 <div class="container">
 
     <h2>회원 수정</h2>
@@ -103,7 +101,6 @@
 
 </div>
 
-<!-- 회원 삭제 -->
 <div class="container">
 
     <h2>회원 삭제</h2>
@@ -114,7 +111,6 @@
 
 </div>
 
-<!-- 전체 조회 -->
 <div class="container">
 
     <h2>회원 전체 조회</h2>
@@ -147,10 +143,12 @@
     // 회원 등록
     async function createMember() {
 
+        // 기존에 있던 오타(ElementById -> getElementById)도 함께 수정했습니다.
         const member = {
             name: document.getElementById("name").value,
-            age: document.getElementById("age").value,
-            email: document.getElementById("email").value
+            age: parseInt(document.getElementById("age").value),
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value // 비밀번호 데이터 추가
         };
 
         const response = await fetch(API_URL, {
@@ -166,6 +164,12 @@
         alert("회원 등록 완료");
 
         console.log(result);
+
+        // 등록 완료 후 폼 초기화 (선택 사항)
+        document.getElementById("name").value = "";
+        document.getElementById("age").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("password").value = "";
 
         findAllMembers();
     }
